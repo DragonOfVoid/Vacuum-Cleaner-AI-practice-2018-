@@ -1,0 +1,5 @@
+<launch> 
+    <param name="/use_sim_time" value="true" />   
+    <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch"/>
+    <node name="cleaner" pkg="cleaner" type="cleaner" output="screen"/>
+</launch>
