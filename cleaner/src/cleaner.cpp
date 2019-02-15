@@ -39,9 +39,11 @@ bool isObstacleInFront = false;
         }
     }
 
-    if (isObstacleInFront) {
+    if (isObstacleInFront)
         keepMoving = false;
-    }
+    else
+	keepMoving = true;
+
 }
 
 void Cleaner::startMoving()
@@ -50,9 +52,10 @@ void Cleaner::startMoving()
     ROS_INFO("Start moving");
 
     while (ok()) {
-	while(!keepMoving)
-		turnRight();
-        moveForward();
+	if(!keepMoving)
+	    turnRight();
+	else
+            moveForward();
         ros::spinOnce();
         rate.sleep();
     }

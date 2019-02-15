@@ -1,7 +1,5 @@
 #include "Cleaner.h"
 #include "geometry_msgs/Twist.h"
-#include "nav_msgs/Odometry.h"
-#include "tf/transform_datatypes.h"
 
 using namespace ros;
 
@@ -12,10 +10,6 @@ Cleaner::Cleaner()
     commandPub = node.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/teleop", 10);
 
     laserSub = node.subscribe("scan", 1, &Cleaner::scanCallback, this);
-
-
-    poseSub = node.subscribe("odom", 100, &Cleaner::poseCallback, this);
-
 }
 
 void Cleaner::moveForward() {
@@ -29,7 +23,6 @@ void Cleaner::turnRight() {
     geometry_msgs::Twist msg;
     msg.angular.z = -TURNING_SPEED;
     commandPub.publish(msg);
-    ROS_INFO("Beep!");
 }
 
 void Cleaner::scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
@@ -46,9 +39,11 @@ bool isObstacleInFront = false;
         }
     }
 
-    if (isObstacleInFront) {
+    if (isObstacleInFront)
         keepMoving = false;
-    }
+    else
+	keepMoving = true;
+
 }
 
 void Cleaner::startMoving()
@@ -57,9 +52,10 @@ void Cleaner::startMoving()
     ROS_INFO("Start moving");
 
     while (ok()) {
-	while(!keepMoving)
-		turnRight();
-        moveForward();
+	if(!keepMoving)
+	    turnRight();
+	else
+            moveForward();
         ros::spinOnce();
         rate.sleep();
     }
