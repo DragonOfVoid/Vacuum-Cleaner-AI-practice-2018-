@@ -2,6 +2,8 @@
 #define WANDER_BOT_SRC_STOPPER_H_
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
+#include "nav_msgs/Odometry.h"
+
 
 
 using namespace ros;
@@ -20,10 +22,13 @@ public:
 private:
     NodeHandle node;
     Publisher commandPub;
-    Subscriber laserSub;
-    bool keepMoving;
+    Subscriber laserSub; 
+    Subscriber poseSub;
+    int state;
+    float yaw;
     void moveForward();
-    void turnRight();
+    void turn(int side);
+    void poseCallback(const nav_msgs::Odometry::ConstPtr& pose);
     void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
 };
 

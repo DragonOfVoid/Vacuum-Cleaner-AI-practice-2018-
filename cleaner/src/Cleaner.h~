@@ -5,6 +5,7 @@
 #include "nav_msgs/Odometry.h"
 
 
+
 using namespace ros;
 
 class Cleaner {
@@ -21,10 +22,13 @@ public:
 private:
     NodeHandle node;
     Publisher commandPub;
-    Subscriber laserSub;
-    bool keepMoving;
+    Subscriber laserSub; 
+    Subscriber poseSub;
+    int state;
+    float yaw;
     void moveForward();
     void turnRight();
+    void poseCallback(const nav_msgs::Odometry::ConstPtr& pose);
     void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
 };
 
